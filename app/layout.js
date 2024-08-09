@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "YetiAI",
-  description: "Created by lhasang",
+  description: "Created by Team",
 };
 
 export default function RootLayout({ children }) {
