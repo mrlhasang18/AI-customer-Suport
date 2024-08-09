@@ -1,0 +1,16 @@
+{
+    "welcome": "स्वागत छ!",
+    "signOut": "साइन आउट गर्नुहोस्",
+    "newChat": "नयाँ च्याट",
+    "darkMode": "डार्क मोड",
+    "loadOlder": "पुराना सन्देश लोड गर्नुहोस्",
+    "typePlaceholder": "एक सन्देश टाइप गर्नुहोस्...",
+    "pleaseSignIn": "कृपया साइन इन गर्नुहोस्",
+    "provideFeedback": "फीडब्याक प्रदान गर्नुहोस्",
+    "rateExperience": "तपाईंको अनुभव रेट गर्नुहोस्",
+    "feedbackComment": "एक टिप्पणी छोड्नुहोस्",
+    "cancel": "रद्द गर्नुहोस्",
+    "submit": "प्रस्तुत गर्नुहोस्",
+    "securityScore": "सुरक्षा स्कोर",
+    "securityScoreMessage": "तपाईंको सुरक्षा स्कोर {score} मा 100 हो"
+  }

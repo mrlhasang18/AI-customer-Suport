@@ -1,0 +1,17 @@
+
+{
+    "welcome": "Welcome to our application!",
+    "signOut": "Sign out",
+    "newChat": "New chat",
+    "darkMode": "Dark mode",
+    "loadOlder": "Load older messages",
+    "typePlaceholder": "Type a message...",
+    "pleaseSignIn": "Please sign in to continue",
+    "provideFeedback": "Provide feedback",
+    "rateExperience": "Rate your experience",
+    "feedbackComment": "Leave a comment",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "securityScore": "Security score",
+    "securityScoreMessage": "Your security score is {score} out of 100"
+  }
