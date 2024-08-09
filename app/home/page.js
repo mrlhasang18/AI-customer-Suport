@@ -1,11 +1,12 @@
 "use client";
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography, Avatar } from "@mui/material";
 import { auth, firestore } from '../lib/firebase';
 import { useRouter } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { signOut } from 'firebase/auth';
 import { collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from 'firebase/firestore';
 import { useState, useEffect, useRef } from "react";
+import SendIcon from '@mui/icons-material/Send';
 
 export default function Home() {
   const [user] = useAuthState(auth);
@@ -149,90 +150,123 @@ export default function Home() {
     }
   };
 
-  return (
-    <Box
-      sx={{
-        width: '100vw',
-        height: '100vh',
+ // ...
+
+return (
+  <Box
+    sx={{
+      width: '100vw',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      bgcolor: '#121212',
+      color: 'white'
+    }}
+  >
+    <Box sx={{ p: 3, textAlign: 'center' }}>
+      <Typography variant="h2" component="h1" gutterBottom>
+        YETI AI
+      </Typography>
+      <Typography variant="subtitle1">
+        Your personal AI security assistant
+      </Typography>
+    </Box>
+
+    {user ? (
+      <Box sx={{
+        flexGrow: 1,
+        mx: 3,
+        mb: 3,
+        bgcolor: '#1E1E1E',
+        borderRadius: '16px 16px 0 0',
+        border: '1px solid #333',
+        borderBottom: 'none',
+        overflow: 'hidden',
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        p: 2,
-        bgcolor: '#181818',
-        color: '#fff' 
-      }}
-    >
-      {user ? (
-        <>
-          <Button variant="contained" onClick={handleLogout} sx={{ bgcolor: '#707070', color: '#fff', marginRight: '10px' }}>
+        flexDirection: 'column',
+        maxWidth: '600px', // Reduced width
+        margin: '0 auto' // Centered horizontally
+      }}>
+        <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between' }}>
+          <Button variant="contained" onClick={handleLogout} sx={{ bgcolor: '#707070', color: '#fff' }}>
             Sign Out
           </Button>
           <Button variant="contained" onClick={handleNewChat} sx={{ bgcolor: '#707070', color: '#fff' }}>
             New Chat
           </Button>
-          <Stack
-            direction="column"
-            width="70%"
-            height="100%"
-            border="1px solid #404040"
-            p={2}
-            spacing={3}
-            sx={{ borderRadius: '16px' }} 
-          >
-            <Stack
-              direction="column"
-              spacing={2}
-              flexGrow={1}
-              overflow="auto"
-              maxHeight="100%"
-              sx={{ backgroundColor: '#1F1F1F', padding: '20px', borderRadius: '16px' }}
+        </Box>
+
+        <Box sx={{
+          flexGrow: 1,
+          overflowY: 'auto',
+          p: 2,
+          maxHeight: '400px' // Limited height
+        }}>
+          {messages.map((message, index) => (
+            <Box
+              key={index}
+              sx={{
+                display: 'flex',
+                justifyContent: message.role === 'user' ? 'flex-end' : 'flex-start',
+                mb: 2
+              }}
             >
-              {messages.map((message, index) => (
-                <Box
-                  key={index}
-                  display="flex"
-                  justifyContent={
-                    message.role === "assistant" ? "flex-start" : "flex-end"
-                  }
+              {message.role === 'assistant' && (
+                <Avatar sx={{ mr: 1, bgcolor: 'primary.main' }}>YA</Avatar>
+              )}
+              <Box
+                sx={{
+                  bgcolor: message.role === 'user' ? '#222222' : '#292929',
+                  color: 'white',
+                  borderRadius: 2,
+                  p: 2,
+                  maxWidth: '70%'
+                }}
+              >
+                <Typography>{message.content}</Typography>
+              </Box>
+              {message.role === 'user' && (
+                <Avatar sx={{ ml: 1, bgcolor: 'secondary.main' }}>U</Avatar>
+              )}
+            </Box>
+          ))}
+          <div ref={messageEndRef} />
+        </Box>
+
+        <Box sx={{ p: 2, bgcolor: '#1E1E1E' }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Type a message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={loading}
+            InputProps={{
+              endAdornment: (
+                <Button
+                  onClick={sendMessage}
+                  disabled={loading}
+                  sx={{ bgcolor: '#FFD700', color: 'black', '&:hover': { bgcolor: '#FFD700' } }}
                 >
-                  <Box
-                    bgcolor={
-                      message.role === "assistant"
-                        ? "#292929"
-                        : "#222222"
-                    }
-                    color="white"
-                    p={3}
-                    borderRadius={16}
-                    sx={{ maxWidth: '60%', wordBreak: 'break-word' }} 
-                  >
-                    {message.content}
-                  </Box>
-                </Box>
-              ))}
-              <div ref={messageEndRef} />
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <TextField
-                label="Message"
-                fullWidth
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                variant="outlined"
-                onKeyPress={handleKeyPress}
-                disabled={loading}
-                sx={{ backgroundColor: '#292929', color: '#fff', '& .MuiOutlinedInput-root': { '& fieldset': { borderColor: '#404040' } }, '& .MuiInputLabel-root': { color: '#fff' }, '& .MuiInputBase-input': { color: '#fff' } }} 
-              />
-              <Button variant="contained" onClick={sendMessage} disabled={loading} sx={{ bgcolor: '#5E5E5E', color: '#fff', '&:hover': { bgcolor: '#707070' } }}>
-                {loading ? 'Sending...' : 'Send'}
-              </Button>
-            </Stack>
-          </Stack>
-        </>
-      ) : (
-        <Typography variant="body1" sx={{ textAlign: 'center' }}>Please sign in to start chatting.</Typography>
-      )}
-    </Box>
-  );
+                  <SendIcon />
+                </Button>
+              ),
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                color: 'white',
+                '& fieldset': { borderColor: '#333' },
+                '&:hover fieldset': { borderColor: '#444' },
+                '&.Mui-focused fieldset': { borderColor: '#555' },
+              },
+            }}
+          />
+        </Box>
+      </Box>
+    ) : (
+      <Typography variant="body1" sx={{ textAlign: 'center' }}>Please sign in to start chatting.</Typography>
+    )}
+  </Box>
+);
 }
