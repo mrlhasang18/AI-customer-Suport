@@ -1,3 +1,5 @@
+// Feedback section with firebase integration added + Better UI
+
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import {
@@ -393,7 +395,7 @@ export default function Home() {
         <FeedbackIcon />
       </IconButton>
 
-      
+    
       <Dialog open={feedbackOpen} onClose={handleFeedbackClose}>
         <DialogTitle>Provide Feedback</DialogTitle>
         <DialogContent>
@@ -425,3 +427,5 @@ export default function Home() {
     </Box>
   );
 }
+
+
