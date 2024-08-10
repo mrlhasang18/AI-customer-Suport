@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { Box, Button, TextField, Typography, Link } from "@mui/material";
 import { auth } from '../lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
-import '@fontsource/raleway'; // Import Raleway font for a modern look
-import '@fontsource/roboto'; // Import Roboto font for additional styling
+import '@fontsource/raleway';// Import Raleway font for a modern look
+import '@fontsource/roboto';// Import Roboto font for additional styling
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,10 +25,11 @@ export default function Auth() {
       console.error("Authentication error:", error);
     }
   };
+
   return (
     <Box
-      width="100vw"
-      height="100vh"
+      width="100%"
+      minHeight="100vh"
       display="flex"
       justifyContent="center"
       alignItems="center"
@@ -36,8 +37,7 @@ export default function Auth() {
       padding={2}
     >
       <Box
-        width={{ xs: '90%', sm: '80%', md: '800px' }}
-        height={{ xs: 'auto', sm: '600px', md: 'auto' }}
+        width={{ xs: '95%', sm: '90%', md: '800px' }}
         display="flex"
         flexDirection={{ xs: 'column', md: 'row' }}
         borderRadius={4}
@@ -51,16 +51,16 @@ export default function Auth() {
           flexDirection="column"
           justifyContent="center"
           alignItems="flex-start"
-          padding={4}
+          padding={{ xs: 3, sm: 4 }}
           sx={{
             bgcolor: '#FFFFFF',
             height: '100%',
           }}
         >
           <Box display="flex" alignItems="center" mb={2}>
-            <img src="/favicon.ico" alt="Yeti AI Logo" style={{ width: 40, height: 40 }} />
+            <img src="/favicon.ico" alt="Yeti AI Logo" style={{ width: 32, height: 32 }} />
             <Typography
-              variant="h4"
+              variant="h5"
               fontWeight="bold"
               sx={{ color: '#121212', ml: 1, fontFamily: 'Raleway, sans-serif' }}
             >
@@ -68,7 +68,7 @@ export default function Auth() {
             </Typography>
           </Box>
           <Typography
-            variant="h5"
+            variant="h6"
             fontWeight="bold"
             mb={1}
             sx={{ color: '#121212', textAlign: 'left', fontFamily: 'Raleway, sans-serif' }}
@@ -76,7 +76,7 @@ export default function Auth() {
             {isLogin ? "Welcome Back" : "Create Account"}
           </Typography>
           <Typography
-            variant="body1"
+            variant="body2"
             mb={3}
             sx={{ color: '#333', textAlign: 'left', fontFamily: 'Roboto, sans-serif' }}
           >
@@ -128,7 +128,7 @@ export default function Auth() {
               textTransform: 'none',
               boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
               fontSize: '0.875rem',
-              padding: '12px 0',
+              padding: '10px 0',
               fontFamily: 'Roboto, sans-serif'
             }}
           >
@@ -153,15 +153,16 @@ export default function Auth() {
 
         <Box
           width={{ xs: '100%', md: '50%' }}
-          height={{ xs: '300px', md: 'auto' }}
+          height={{ xs: '200px', sm: '300px', md: 'auto' }}
           bgcolor="#1E1E1E"
-          m={1}
+          m={{ xs: 0, md: 1 }}
+          mt={{ xs: 2, md: 1 }}
           boxShadow="0px 8px 25px rgba(0, 0, 0, 0.7)"
           sx={{
             backgroundImage: 'url(/image/ai.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            borderRadius: '5px 5px 5px 30px',
+            borderRadius: { xs: '5px', md: '5px 5px 5px 30px' },
           }}
         />
       </Box>
