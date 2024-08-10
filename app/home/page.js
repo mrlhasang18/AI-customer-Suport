@@ -32,9 +32,11 @@ import {
 } from "firebase/firestore";
 import SendIcon from "@mui/icons-material/Send";
 import FeedbackIcon from "@mui/icons-material/Feedback";
+import Image from "next/image";
 
 export default function Home() {
   const [user] = useAuthState(auth);
+  const [userPhotoURL, setUserPhotoURL] = useState(null);
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -44,6 +46,17 @@ export default function Home() {
   const [feedbackComment, setFeedbackComment] = useState("");
   const router = useRouter();
   const messageEndRef = useRef(null);
+
+
+  useEffect(() => {
+    if (user) {
+      console.log("User object:", user);
+      console.log("User photo URL:", user.photoURL);
+      setUserPhotoURL(user.photoURL);
+    }
+  }, [user]);
+
+
 
   useEffect(() => {
     const fetchPreviousChatSession = async () => {
@@ -76,6 +89,9 @@ export default function Home() {
   const scrollToBottom = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+
+
 
   const sendMessage = async (content = message) => {
     if (!content || loading || !currentChatId) return;
@@ -186,6 +202,8 @@ export default function Home() {
     setFeedbackOpen(false);
   };
 
+
+  //for feedback 
   const handleFeedbackSubmit = async () => {
     if (user) {
       try {
@@ -205,10 +223,17 @@ export default function Home() {
   };
 
   const predefinedQuestions = [
-    "Tell me about cybersecurity best practices",
+    "Tell me about SecurityPal ?",
     "How can I protect my online accounts?",
     "What are common phishing tactics?",
   ];
+
+
+  
+
+
+
+
 
   return (
     <Box
@@ -282,6 +307,8 @@ export default function Home() {
               flexDirection: "column",
             }}
           >
+
+
             {messages.map((message, index) => (
               <Box
                 key={index}
@@ -293,10 +320,14 @@ export default function Home() {
                 }}
               >
                 {message.role === "assistant" && (
-                  <Avatar
-                    sx={{ mr: 1, bgcolor: "primary.main" }}
-                    src="/app/favicon.ico"
-                  />
+                   <Avatar sx={{ mr: 1, bgcolor: "primary.main" }}>
+                   <Image
+                     src="/yeti.png"
+                     alt="Yeti Avatar"
+                     width={40}
+                     height={40}
+                   />
+                 </Avatar>
                 )}
                 <Paper
                   elevation={3}
@@ -317,7 +348,9 @@ export default function Home() {
                   <Avatar
                     sx={{ ml: 1, bgcolor: "secondary.main" }}
                     src={user.photoURL}
-                  />
+                  >
+                    {!userPhotoURL && user?.displayName ? user.displayName[0].toUpperCase() : null}
+                    </Avatar>
                 )}
               </Box>
             ))}
@@ -369,8 +402,8 @@ export default function Home() {
                 "& .MuiOutlinedInput-root": {
                   color: "white",
                   "& fieldset": { borderColor: "#333" },
-                  "&:hover fieldset": { borderColor: "#444" },
-                  "&.Mui-focused fieldset": { borderColor: "#555" },
+                 "&:hover fieldset": { borderColor: "#4CAF50" },
+                  "&.Mui-focused fieldset": { borderColor: "#4CAF50" },
                 },
               }}
             />

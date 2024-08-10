@@ -125,10 +125,10 @@ const Welcome = () => {
         style={{
           zIndex: 1,
           backgroundColor: '#4CAF50',
-          color: '#fff',
+          color: '#ccc',
           padding: '1rem 2rem',
           fontSize: '1.2rem',
-          fontWeight: 'bold',
+          fontWeight: 'regular',
           textTransform: 'uppercase',
           borderRadius: '10px',
           cursor: 'pointer',

@@ -1,5 +1,26 @@
 Welcome to our AI-Customer-Support project. This is the Team project for third week of the Headstarter AI fellowship.
 
+## Setting up the projet
+
+Step 1: Clone the repository to your local directory of choice
+Step 2: Use 
+```bash
+npm install
+```
+Step 3: Install the package for using Gemini in your chat
+```bash
+npm install @google/generative-ai
+```
+Step 4: 
+
+Finally, you need to set your API key for this follow the following:
+
+    1. Get your api key from https://aistudio.google.com/app/apikey
+    2. Create a folder in your root directory named ```.env.local```
+    3. Inside ```.env.local``` add following line
+        ```GEMINI_API_KEY= your api key```
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
