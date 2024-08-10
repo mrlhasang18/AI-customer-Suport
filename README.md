@@ -11,27 +11,21 @@ Step 3: Install the package for using Gemini in your chat
 ```bash
 npm install @google/generative-ai
 ```
-<<<<<<< HEAD
 Step 4: 
 
 Finally, you need to set your API key for this follow the following:
 
-=======
-Step 4: Finally, you need to set your API key for this follow the following:
->>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
+
     1. Get your api key from https://aistudio.google.com/app/apikey
     2. Create a folder in your root directory named ```.env.local```
     3. Inside ```.env.local``` add following line
         ```GEMINI_API_KEY= your api key```
 
 
-<<<<<<< HEAD
-=======
-------
 
 
 
->>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

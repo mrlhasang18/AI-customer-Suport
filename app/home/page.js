@@ -283,17 +283,16 @@ export default function Home() {
         >
           <Box sx={{ p: 2, display: "flex", justifyContent: "space-between" }}>
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={handleLogout}
-              color="success"
-              sx={{ color: "#4CAF50", outlineColor: "#4CAF50"}}
+              sx={{ bgcolor: "#707070", color: "#fff" }}
             >
               Sign Out
             </Button>
             <Button
               variant="contained"
               onClick={handleNewChat}
-              sx={{ bgcolor: "#4CAF50", color: "#fff",  '&:hover': { bgcolor: '#4CAF59' }}}
+              sx={{ bgcolor: "#707070", color: "#fff" }}
             >
               New Chat
             </Button>
@@ -403,11 +402,7 @@ export default function Home() {
                 "& .MuiOutlinedInput-root": {
                   color: "white",
                   "& fieldset": { borderColor: "#333" },
-<<<<<<< HEAD
                  "&:hover fieldset": { borderColor: "#4CAF50" },
-=======
-                  "&:hover fieldset": { borderColor: "#4CAF50" },
->>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
                   "&.Mui-focused fieldset": { borderColor: "#4CAF50" },
                 },
               }}
@@ -425,9 +420,8 @@ export default function Home() {
         sx={{
           position: "fixed",
           bottom: 66,
-          right: 100,
+          right: 16,
           bgcolor: "#FFD700",
-          "&:hover": {bgcolor: '#4CAF50'},
           color: "black",
         }}
       >
