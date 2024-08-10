@@ -149,6 +149,7 @@ export default function Auth() {
             fullWidth
             sx={{
               mb: 2,
+<<<<<<< HEAD
               "& .MuiInputLabel-root": {
                 color: "#555",
                 fontSize: "0.875rem",
@@ -163,6 +164,13 @@ export default function Auth() {
                 color: "#121212",
                 fontSize: "0.875rem",
                 fontFamily: "Roboto, sans-serif",
+=======
+              '& .MuiInputLabel-root': { color: '#555', fontSize: '0.875rem', fontFamily: 'Roboto, sans-serif' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#aaa' },
+                '&:hover fieldset': { borderColor: '#4CAF50' },
+                '&.Mui-focused fieldset': { borderColor: '#4CAF50' },
+>>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
               },
             }}
           />
@@ -174,6 +182,7 @@ export default function Auth() {
             fullWidth
             sx={{
               mb: 2,
+<<<<<<< HEAD
               "& .MuiInputLabel-root": {
                 color: "#555",
                 fontSize: "0.875rem",
@@ -188,6 +197,13 @@ export default function Auth() {
                 color: "#121212",
                 fontSize: "0.875rem",
                 fontFamily: "Roboto, sans-serif",
+=======
+              '& .MuiInputLabel-root': { color: '#555', fontSize: '0.875rem', fontFamily: 'Roboto, sans-serif' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: '#aaa' },
+                '&:hover fieldset': { borderColor: '#4CAF50' },
+                '&.Mui-focused fieldset': { borderColor: '#4CAF50' },
+>>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
               },
             }}
           />
@@ -220,10 +236,17 @@ export default function Auth() {
             onClick={handleSubmit}
             fullWidth
             sx={{
+<<<<<<< HEAD
               bgcolor: "#4CAF50",
               color: "#fff",
               mb: 2,
               "&:hover": { bgcolor: "#4CAF50" },
+=======
+              bgcolor: '#4CAF50',
+              color: '#fff',
+              mb: 2,
+              '&:hover': { bgcolor: '#4CAF59' },
+>>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
               borderRadius: 2,
               textTransform: "none",
               boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.3)",
@@ -242,7 +265,11 @@ export default function Auth() {
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <Link
               href="#"
+<<<<<<< HEAD
               sx={{ color: "#4CAF50", cursor: "pointer" }}
+=======
+              sx={{ color: '#4CAF50', cursor: 'pointer' }}
+>>>>>>> 42aef74cbc54c7da1a14541ab6e9b9a23aeeb924
               underline="hover"
               onClick={() => setIsLogin(!isLogin)}
             >

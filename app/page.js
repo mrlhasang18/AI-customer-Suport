@@ -89,12 +89,15 @@ const Welcome = () => {
       justifyContent="center"
       alignItems="center"
       flexDirection="column"
+      gap={5}
       sx={{
         position: 'relative',
         overflow: 'hidden',
         backgroundColor: '#0a0a0a', // Dark background
-      }}
+      }
+    }
     >
+      <Box display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>
       <h1
         style={{
           color: '#fff',
@@ -109,16 +112,17 @@ const Welcome = () => {
       </h1>
       <p
         style={{
-          color: '#fff',
+          color: '#ccc',
           zIndex: 1,
           fontSize: windowWidth < 768 ? '1.2rem' : '1.5rem',
-          fontWeight: 'bold',
+          fontWeight: 'regular',
           textShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
           animation: 'pulse 2s infinite',
         }}
       >
         Explore the power of AI with us
       </p>
+      </Box>
       <Button
         variant="contained"
         onClick={handleNavigate}
