@@ -15,6 +15,8 @@ import {
   DialogContent,
   DialogActions,
   Rating,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { auth, firestore } from "../lib/firebase";
 import { useRouter } from "next/navigation";
@@ -44,6 +46,8 @@ export default function Home() {
   const [feedbackComment, setFeedbackComment] = useState("");
   const router = useRouter();
   const messageEndRef = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   useEffect(() => {
     const fetchPreviousChatSession = async () => {
@@ -210,10 +214,12 @@ export default function Home() {
     "What are common phishing tactics?",
   ];
 
+
+
   return (
     <Box
       sx={{
-        width: "100vw",
+        width: "100%",
         height: "100vh",
         display: "flex",
         flexDirection: "column",
@@ -221,13 +227,13 @@ export default function Home() {
         color: "white",
       }}
     >
-      <Box sx={{ p: 3, textAlign: "center" }}>
+      <Box sx={{ p: { xs: 2, sm: 3 }, textAlign: "center" }}>
         <Typography
           variant="h2"
           component="h1"
           gutterBottom
           fontFamily="Orbitron"
-          fontSize="48px"
+          fontSize={{ xs: "32px", sm: "48px" }}
           fontWeight="bold"
           color="#33CCFF"
           textShadow="0px 0px 10px rgba(255, 255, 255, 0.5)"
@@ -243,7 +249,7 @@ export default function Home() {
         <Box
           sx={{
             flexGrow: 1,
-            mx: 3,
+            mx: { xs: 1, sm: 3 },
             mb: 3,
             bgcolor: "#1E1E1E",
             borderRadius: "16px 16px 0 0",
@@ -260,14 +266,14 @@ export default function Home() {
             <Button
               variant="contained"
               onClick={handleLogout}
-              sx={{ bgcolor: "#707070", color: "#fff" }}
+              sx={{ bgcolor: "#707070", color: "#fff", fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
             >
               Sign Out
             </Button>
             <Button
               variant="contained"
               onClick={handleNewChat}
-              sx={{ bgcolor: "#707070", color: "#fff" }}
+              sx={{ bgcolor: "#707070", color: "#fff", fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
             >
               New Chat
             </Button>
@@ -294,7 +300,7 @@ export default function Home() {
               >
                 {message.role === "assistant" && (
                   <Avatar
-                    sx={{ mr: 1, bgcolor: "primary.main" }}
+                    sx={{ mr: 1, bgcolor: "primary.main", width: 32, height: 32 }}
                     src="/app/favicon.ico"
                   />
                 )}
@@ -311,11 +317,11 @@ export default function Home() {
                         : "20px 20px 20px 0",
                   }}
                 >
-                  <Typography>{message.content}</Typography>
+                  <Typography fontSize={{ xs: '0.875rem', sm: '1rem' }}>{message.content}</Typography>
                 </Paper>
                 {message.role === "user" && (
                   <Avatar
-                    sx={{ ml: 1, bgcolor: "secondary.main" }}
+                    sx={{ ml: 1, bgcolor: "secondary.main", width: 32, height: 32 }}
                     src={user.photoURL}
                   />
                 )}
@@ -323,7 +329,7 @@ export default function Home() {
             ))}
             {messages.length === 1 && (
               <Box sx={{ mt: 2 }}>
-                <Typography variant="h6" gutterBottom>
+                <Typography variant="h6" gutterBottom fontSize={{ xs: '1rem', sm: '1.25rem' }}>
                   Quick Start:
                 </Typography>
                 {predefinedQuestions.map((question, index) => (
@@ -331,7 +337,7 @@ export default function Home() {
                     key={index}
                     variant="outlined"
                     onClick={() => sendMessage(question)}
-                    sx={{ mr: 1, mb: 1 }}
+                    sx={{ mr: 1, mb: 1, fontSize: { xs: '0.7rem', sm: '0.875rem' } }}
                   >
                     {question}
                   </Button>
@@ -341,7 +347,7 @@ export default function Home() {
             <div ref={messageEndRef} />
           </Box>
 
-          <Box sx={{ p: 2, bgcolor: "#1E1E1E" }}>
+          <Box sx={{ p: 2, bgcolor: "#1E1E1E", position: 'relative' }}>
             <TextField
               fullWidth
               variant="outlined"
@@ -386,7 +392,7 @@ export default function Home() {
         onClick={handleFeedbackOpen}
         sx={{
           position: "fixed",
-          bottom: 16,
+          bottom: isMobile ? 80 : 16,
           right: 16,
           bgcolor: "#FFD700",
           color: "black",
@@ -395,8 +401,7 @@ export default function Home() {
         <FeedbackIcon />
       </IconButton>
 
-    
-      <Dialog open={feedbackOpen} onClose={handleFeedbackClose}>
+      <Dialog open={feedbackOpen} onClose={handleFeedbackClose} fullWidth maxWidth="sm">
         <DialogTitle>Provide Feedback</DialogTitle>
         <DialogContent>
           <Typography component="legend">Rate your experience:</Typography>
@@ -427,5 +432,3 @@ export default function Home() {
     </Box>
   );
 }
-
-
