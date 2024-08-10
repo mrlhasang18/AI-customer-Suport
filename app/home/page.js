@@ -283,16 +283,16 @@ export default function Home() {
         >
           <Box sx={{ p: 2, display: "flex", justifyContent: "space-between" }}>
             <Button
-              variant="contained"
+              variant="outlined"
               onClick={handleLogout}
-              sx={{ bgcolor: "#707070", color: "#fff" }}
+              sx={{ bgcolor: "#", color: "#fff", border: "1px solid #4CAF50"}}
             >
               Sign Out
             </Button>
             <Button
               variant="contained"
               onClick={handleNewChat}
-              sx={{ bgcolor: "#707070", color: "#fff" }}
+              sx={{ bgcolor: "#4CAF50", color: "#fff" }}
             >
               New Chat
             </Button>
