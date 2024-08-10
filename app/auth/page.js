@@ -92,8 +92,8 @@ export default function Auth() {
               '& .MuiInputLabel-root': { color: '#555', fontSize: '0.875rem', fontFamily: 'Roboto, sans-serif' },
               '& .MuiOutlinedInput-root': {
                 '& fieldset': { borderColor: '#aaa' },
-                '&:hover fieldset': { borderColor: '#777' },
-                '&.Mui-focused fieldset': { borderColor: '#333' },
+                '&:hover fieldset': { borderColor: '#4CAF50' },
+                '&.Mui-focused fieldset': { borderColor: '#4CAF50' },
               },
               input: { color: '#121212', fontSize: '0.875rem', fontFamily: 'Roboto, sans-serif' },
             }}
@@ -109,8 +109,8 @@ export default function Auth() {
               '& .MuiInputLabel-root': { color: '#555', fontSize: '0.875rem', fontFamily: 'Roboto, sans-serif' },
               '& .MuiOutlinedInput-root': {
                 '& fieldset': { borderColor: '#aaa' },
-                '&:hover fieldset': { borderColor: '#777' },
-                '&.Mui-focused fieldset': { borderColor: '#333' },
+                '&:hover fieldset': { borderColor: '#4CAF50' },
+                '&.Mui-focused fieldset': { borderColor: '#4CAF50' },
               },
               input: { color: '#121212', fontSize: '0.875rem', fontFamily: 'Roboto, sans-serif' },
             }}
@@ -120,10 +120,10 @@ export default function Auth() {
             onClick={handleSubmit}
             fullWidth
             sx={{
-              bgcolor: '#007BFF',
+              bgcolor: '#4CAF50',
               color: '#fff',
               mb: 2,
-              '&:hover': { bgcolor: '#0056b3' },
+              '&:hover': { bgcolor: '#4CAF59' },
               borderRadius: 2,
               textTransform: 'none',
               boxShadow: '0px 6px 15px rgba(0, 0, 0, 0.3)',
@@ -142,7 +142,7 @@ export default function Auth() {
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <Link
               href="#"
-              sx={{ color: '#007BFF', cursor: 'pointer' }}
+              sx={{ color: '#4CAF50', cursor: 'pointer' }}
               underline="hover"
               onClick={() => setIsLogin(!isLogin)}
             >
