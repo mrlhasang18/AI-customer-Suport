@@ -10,7 +10,7 @@ The Tech stack used :
 3. Firebase:
   a.Firebase Database: A NoSQL cloud-hosted database for storing and retrieving  data.
   b.Firebase Auth: A authentication and authorization system for managing user identities.
-  Firebase Storage: A cloud-based storage solution for storing and serving files(Image).
+  c.Firebase Storage: A cloud-based storage solution for storing and serving files(Image).
 
 4.Gemini (via @google/generative-ai package): A generative AI model for chatbots and conversational interfaces(gemini-1.5-pro Model).
 
