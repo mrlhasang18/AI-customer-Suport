@@ -34,6 +34,25 @@ import SendIcon from "@mui/icons-material/Send";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import Image from "next/image";
 
+// Predefined Q&A
+const predefinedQA = [
+  {
+    question: "What is SecurityPal?",
+    answer:
+      "SecurityPal is a comprehensive cybersecurity solution designed to protect individuals and organizations from digital threats. It offers advanced features such as real-time threat detection, secure communication channels, and vulnerability assessments.",
+  },
+  {
+    question: "How does SecurityPal enhance digital security?",
+    answer:
+      "SecurityPal enhances digital security through a multi-layered approach, including real-time monitoring, AI-powered threat detection, encryption of communication channels, regular security audits, and user education on best security practices.",
+  },
+  {
+    question: "What tools does SecurityPal use to prevent cyber attacks?",
+    answer:
+      "SecurityPal employs various tools to safeguard users, including advanced firewalls, intrusion detection systems, malware scanners, multi-factor authentication, and secure VPN services. It also utilizes machine learning algorithms to detect and prevent novel threats.",
+  },
+];
+
 export default function Home() {
   const [user] = useAuthState(auth);
   const [userPhotoURL, setUserPhotoURL] = useState(null);
@@ -47,7 +66,6 @@ export default function Home() {
   const router = useRouter();
   const messageEndRef = useRef(null);
 
-
   useEffect(() => {
     if (user) {
       console.log("User object:", user);
@@ -55,8 +73,6 @@ export default function Home() {
       setUserPhotoURL(user.photoURL);
     }
   }, [user]);
-
-
 
   useEffect(() => {
     const fetchPreviousChatSession = async () => {
@@ -90,8 +106,7 @@ export default function Home() {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-
-
+  //
 
   const sendMessage = async (content = message) => {
     if (!content || loading || !currentChatId) return;
@@ -105,55 +120,100 @@ export default function Home() {
     ]);
     setMessage("");
 
-    try {
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify([...messages, userMessage]),
-      });
+    // for predefined Q&A match
+    const matchedQA = predefinedQA.find(
+      (qa) => qa.question.toLowerCase() === content.toLowerCase()
+    );
 
-      if (!response.ok) {
-        throw new Error("Failed to send message.");
+    if (matchedQA) {
+      // predefined answer with a delay
+      const answerChunks = matchedQA.answer.split(". ");
+      const delay = 1000;
+
+      for (let i = 0; i < answerChunks.length; i++) {
+        const chunk = answerChunks[i] + ". ";
+        const assistantMessage = { role: "assistant", content: chunk };
+
+        if (i === 0) {
+          setMessages((prevMessages) => {
+            const updatedMessages = [...prevMessages];
+            updatedMessages[updatedMessages.length - 1] = assistantMessage;
+            return updatedMessages;
+          });
+        } else {
+          setMessages((prevMessages) => [...prevMessages, assistantMessage]);
+        }
+
+        if (user && currentChatId) {
+          const chatDocRef = doc(firestore, "chat_sessions", currentChatId);
+          await updateDoc(chatDocRef, {
+            messages: [...messages, userMessage, assistantMessage],
+            timestamp: serverTimestamp(),
+          });
+        }
+
+        if (i < answerChunks.length - 1) {
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
       }
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const text = decoder.decode(value, { stream: true });
-        setMessages((prevMessages) => {
-          const lastMessage = prevMessages[prevMessages.length - 1];
-          const otherMessages = prevMessages.slice(0, prevMessages.length - 1);
-          return [
-            ...otherMessages,
-            { ...lastMessage, content: lastMessage.content + text },
-          ];
-        });
-      }
-
-      if (user && currentChatId) {
-        const chatDocRef = doc(firestore, "chat_sessions", currentChatId);
-        await updateDoc(chatDocRef, {
-          messages: [...messages, userMessage],
-          timestamp: serverTimestamp(),
-        });
-      }
-    } catch (error) {
-      console.error("Error in sendMessage:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { role: "assistant", content: `Error: ${error.message}` },
-      ]);
-    } finally {
       setLoading(false);
+    } else {
+      // for non-predefined questions, let's call gemini api
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify([...messages, userMessage]),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to send message.");
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const text = decoder.decode(value, { stream: true });
+          setMessages((prevMessages) => {
+            const lastMessage = prevMessages[prevMessages.length - 1];
+            const otherMessages = prevMessages.slice(
+              0,
+              prevMessages.length - 1
+            );
+            return [
+              ...otherMessages,
+              { ...lastMessage, content: lastMessage.content + text },
+            ];
+          });
+        }
+
+        if (user && currentChatId) {
+          const chatDocRef = doc(firestore, "chat_sessions", currentChatId);
+          await updateDoc(chatDocRef, {
+            messages: [...messages, userMessage],
+            timestamp: serverTimestamp(),
+          });
+        }
+      } catch (error) {
+        console.error("Error in sendMessage:", error);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { role: "assistant", content: `Error: ${error.message}` },
+        ]);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
+  // for feedback using material ui
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
@@ -202,8 +262,7 @@ export default function Home() {
     setFeedbackOpen(false);
   };
 
-
-  //for feedback 
+  //for feedback
   const handleFeedbackSubmit = async () => {
     if (user) {
       try {
@@ -221,19 +280,6 @@ export default function Home() {
       }
     }
   };
-
-  const predefinedQuestions = [
-    "Tell me about SecurityPal ?",
-    "How can I protect my online accounts?",
-    "What are common phishing tactics?",
-  ];
-
-
-  
-
-
-
-
 
   return (
     <Box
@@ -285,7 +331,7 @@ export default function Home() {
             <Button
               variant="outlined"
               onClick={handleLogout}
-              sx={{ bgcolor: "#", color: "#fff", border: "1px solid #4CAF50"}}
+              sx={{ bgcolor: "#", color: "#fff", border: "1px solid #4CAF50" }}
             >
               Sign Out
             </Button>
@@ -307,8 +353,6 @@ export default function Home() {
               flexDirection: "column",
             }}
           >
-
-
             {messages.map((message, index) => (
               <Box
                 key={index}
@@ -320,14 +364,14 @@ export default function Home() {
                 }}
               >
                 {message.role === "assistant" && (
-                   <Avatar sx={{ mr: 1, bgcolor: "primary.main" }}>
-                   <Image
-                     src="/yeti.png"
-                     alt="Yeti Avatar"
-                     width={40}
-                     height={40}
-                   />
-                 </Avatar>
+                  <Avatar sx={{ mr: 1, bgcolor: "primary.main" }}>
+                    <Image
+                      src="/yeti.png"
+                      alt="Yeti Avatar"
+                      width={40}
+                      height={40}
+                    />
+                  </Avatar>
                 )}
                 <Paper
                   elevation={3}
@@ -347,10 +391,12 @@ export default function Home() {
                 {message.role === "user" && (
                   <Avatar
                     sx={{ ml: 1, bgcolor: "secondary.main" }}
-                    src={user.photoURL}
+                    src={userPhotoURL}
                   >
-                    {!userPhotoURL && user?.displayName ? user.displayName[0].toUpperCase() : null}
-                    </Avatar>
+                    {!userPhotoURL && user?.displayName
+                      ? user.displayName[0].toUpperCase()
+                      : null}
+                  </Avatar>
                 )}
               </Box>
             ))}
@@ -359,14 +405,19 @@ export default function Home() {
                 <Typography variant="h6" gutterBottom>
                   Quick Start:
                 </Typography>
-                {predefinedQuestions.map((question, index) => (
+                {predefinedQA.map((qa, index) => (
                   <Button
                     key={index}
                     variant="outlined"
-                    onClick={() => sendMessage(question)}
-                    sx={{ mr: 1, mb: 1 }}
+                    onClick={() => sendMessage(qa.question)}
+                    sx={{
+                      mr: 1,
+                      mb: 1,
+                      color: "#4CAF50",
+                      borderColor: "#4CAF50",
+                    }}
                   >
-                    {question}
+                    {qa.question}
                   </Button>
                 ))}
               </Box>
@@ -402,7 +453,7 @@ export default function Home() {
                 "& .MuiOutlinedInput-root": {
                   color: "white",
                   "& fieldset": { borderColor: "#333" },
-                 "&:hover fieldset": { borderColor: "#4CAF50" },
+                  "&:hover fieldset": { borderColor: "#4CAF50" },
                   "&.Mui-focused fieldset": { borderColor: "#4CAF50" },
                 },
               }}
@@ -428,7 +479,6 @@ export default function Home() {
         <FeedbackIcon />
       </IconButton>
 
-    
       <Dialog open={feedbackOpen} onClose={handleFeedbackClose}>
         <DialogTitle>Provide Feedback</DialogTitle>
         <DialogContent>
@@ -460,5 +510,3 @@ export default function Home() {
     </Box>
   );
 }
-
-

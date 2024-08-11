@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import {getFirestore} from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAfzXiDaTZrFG4PnHCdj4Pw_19SaxNSCH0",
@@ -10,7 +10,7 @@ const firebaseConfig = {
   storageBucket: "ai-customtersupport.appspot.com",
   messagingSenderId: "931583057264",
   appId: "1:931583057264:web:5be0d743ad861fe6a043b5",
-  measurementId: "G-F2QGX2GDWC"
+  measurementId: "G-F2QGX2GDWC",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -18,4 +18,4 @@ const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 
-export { auth, firestore,storage };
+export { auth, firestore, storage };

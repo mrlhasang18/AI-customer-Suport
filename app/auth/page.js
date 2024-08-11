@@ -7,7 +7,6 @@ import {
   TextField,
   Typography,
   Link,
-  Avatar,
 } from "@mui/material";
 import { auth, firestore, storage } from "../lib/firebase";
 import {
@@ -17,11 +16,11 @@ import {
 } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from 'firebase/firestore';
-import "@fontsource/raleway"; // Import Raleway font for a modern look
-import "@fontsource/roboto"; // Import Roboto font for additional styling
+import Image from "next/image";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
@@ -33,87 +32,87 @@ export default function Auth() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       let userCredential;
-      if (isLogin) {
-        userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-      } else {
-        userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+      if (!isLogin) { 
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        
         if (profileImage) {
-          const imageRef = ref(
-            storage,
-            `profile_images/${userCredential.user.uid}`
-          );
-          await uploadBytes(imageRef, profileImage);
-          const imageUrl = await getDownloadURL(imageRef);
-          await updateProfile(userCredential.user, { photoURL: imageUrl });
+          const storageRef = ref(storage, `profile_images/${userCredential.user.uid}`);
+          await uploadBytes(storageRef, profileImage);
+          const downloadURL = await getDownloadURL(storageRef);
+          
+          await updateProfile(userCredential.user, {
+            displayName: name, 
+            photoURL: downloadURL
+          });
+          
+          // Store user data in Firestore
           await addDoc(collection(firestore, "users"), {
-            userId: userCredential.user.uid,
-            email: userCredential.user.email,
-            photoURL: imageUrl,
-            createdAt: new Date(),
+            name, 
+            email,
+            photoURL: downloadURL
           });
         }
+      } else {
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
       }
       router.push("/home");
     } catch (error) {
-      console.error("Authentication error:", error);
+      console.error("Error:", error);
+      alert(error.message);
     }
   };
 
+
+
+
+
+// visuals for UI
+
+
   return (
     <Box
-      width="100%"
-      minHeight="100vh"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      bgcolor="#121212"
-      padding={2}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#121212',
+        padding: 2,
+      }}
     >
       <Box
-        width={{ xs: "95%", sm: "90%", md: "800px" }}
-        display="flex"
-        flexDirection={{ xs: "column", md: "row" }}
-        borderRadius={4}
-        boxShadow="0px 6px 30px rgba(0, 0, 0, 0.7)"
-        overflow="hidden"
-        bgcolor="#FFFFFF"
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          width: { xs: '100%', sm: '90%', md: '800px' },
+          backgroundColor: '#FFFFFF',
+          borderRadius: 4,
+          overflow: 'hidden',
+          boxShadow: '0px 6px 30px rgba(0, 0, 0, 0.7)',
+        }}
       >
         <Box
-          width={{ xs: "100%", md: "50%" }}
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="flex-start"
-          padding={{ xs: 3, sm: 4 }}
           sx={{
-            bgcolor: "#FFFFFF",
-            height: "100%",
+            width: { xs: '100%', md: '50%' },
+            padding: { xs: 3, sm: 4 },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
-          <Box display="flex" alignItems="center" mb={2}>
-            <img
-              src="/favicon.ico"
-              alt="Yeti AI Logo"
-              style={{ width: 32, height: 32 }}
-            />
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Image src="/favicon.ico" alt="Yeti AI Logo" width={32} height={32} />
             <Typography
               variant="h5"
-              fontWeight="bold"
               sx={{
-                color: "#121212",
+                fontWeight: 'bold',
+                color: '#121212',
                 ml: 1,
-                fontFamily: "Raleway, sans-serif",
+                fontFamily: 'Raleway, sans-serif',
               }}
             >
               YetiAI
@@ -121,148 +120,113 @@ export default function Auth() {
           </Box>
           <Typography
             variant="h6"
-            fontWeight="bold"
-            mb={1}
             sx={{
-              color: "#121212",
-              textAlign: "left",
-              fontFamily: "Raleway, sans-serif",
+              fontWeight: 'bold',
+              color: '#121212',
+              mb: 1,
+              fontFamily: 'Raleway, sans-serif',
             }}
           >
             {isLogin ? "Welcome Back" : "Create Account"}
           </Typography>
           <Typography
             variant="body2"
-            mb={3}
             sx={{
-              color: "#333",
-              textAlign: "left",
-              fontFamily: "Roboto, sans-serif",
+              color: '#333',
+              mb: 3,
+              fontFamily: 'Roboto, sans-serif',
             }}
           >
             Please enter your {isLogin ? "login" : "sign up"} details below
           </Typography>
-          <TextField
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            fullWidth
-            sx={{
-              mb: 2,
-              "& .MuiInputLabel-root": {
-                color: "#555",
-                fontSize: "0.875rem",
-                fontFamily: "Roboto, sans-serif",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "#aaa" },
-                '&:hover fieldset': { borderColor: '#4CAF50' },
-                '&.Mui-focused fieldset': { borderColor: '#4CAF50' },
-              },  
-              input: {
-                color: "#121212",
-                fontSize: "0.875rem",
-                fontFamily: "Roboto, sans-serif",
-              },
-            }}
-          />
-          <TextField
-            label="Password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            sx={{
-              mb: 2,
-              "& .MuiInputLabel-root": {
-                color: "#555",
-                fontSize: "0.875rem",
-                fontFamily: "Roboto, sans-serif",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "#aaa" },
-                '&:hover fieldset': { borderColor: '#4CAF50' },
-                '&.Mui-focused fieldset': { borderColor: '#4CAF50' },
-              },
-              input: {
-                color: "#121212",
-                fontSize: "0.875rem",
-                fontFamily: "Roboto, sans-serif",
-              },
-            }}
-          />
-
-          {!isLogin && (
-            <Box mb={2}>
-              <input
-                accept="image/*"
-                style={{ display: "none" }}
-                id="raised-button-file"
-                type="file"
-                onChange={handleImageChange}
-              />
-              <label htmlFor="raised-button-file">
-                <Button variant="contained" component="span">
-                  Upload Profile Picture
-                </Button>
-              </label>
-              {profileImage && (
-                <Avatar
-                  src={URL.createObjectURL(profileImage)}
-                  sx={{ width: 60, height: 60, mt: 2 }}
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Name"
+              type="text"
+              fullWidth
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              sx={{ mb: 2 }}
+              required
+            />
+            <TextField
+              label="Email"
+              type="email"
+              fullWidth
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ mb: 2 }}
+              required
+            />
+            <TextField
+              label="Password"
+              type="password"
+              fullWidth
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              sx={{ mb: 2 }}
+              required
+            />
+            {!isLogin && (
+              <Box sx={{ mb: 2 }}>
+                <input
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  id="raised-button-file"
+                  type="file"
+                  onChange={handleImageChange}
                 />
-              )}
-            </Box>
-          )}
-
-          <Button
-            variant="outlined"
-            onClick={handleSubmit}
-            fullWidth
-            sx={{
-              bgcolor: "#4CAF50",
-              color: "#fff",
-              mb: 2,
-              "&:hover": { bgcolor: "#4CAF50" },
-              borderRadius: 2,
-              textTransform: "none",
-              boxShadow: "0px 6px 15px rgba(0, 0, 0, 0.3)",
-              fontSize: "0.875rem",
-              padding: "10px 0",
-              fontFamily: "Roboto, sans-serif",
-            }}
-          >
-            {isLogin ? "Sign In" : "Sign Up"}
-          </Button>
-          <Typography
-            variant="body2"
-            align="center"
-            sx={{ color: "#121212", fontFamily: "Roboto, sans-serif" }}
-          >
+                <label htmlFor="raised-button-file">
+                  <Button
+                    variant="contained"
+                    component="span"
+                    fullWidth
+                    sx={{
+                      backgroundColor: '#1976d2',
+                      color: '#fff',
+                      '&:hover': { backgroundColor: '#1565c0' },
+                    }}
+                  >
+                    Upload Profile Picture
+                  </Button>
+                </label>
+              </Box>
+            )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 1,
+                mb: 2,
+                backgroundColor: '#4CAF50',
+                color: '#fff',
+                '&:hover': { backgroundColor: '#45a049' },
+              }}
+            >
+              {isLogin ? "Sign In" : "Sign Up"}
+            </Button>
+          </form>
+          <Typography variant="body2" align="center">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
             <Link
-              href="#"
-              sx={{ color: "#4CAF50", cursor: "pointer" }}
-              underline="hover"
+              component="button"
+              variant="body2"
               onClick={() => setIsLogin(!isLogin)}
+              sx={{ color: '#4CAF50' }}
             >
               {isLogin ? "Sign Up" : "Log In"}
             </Link>
           </Typography>
         </Box>
-
         <Box
-          width={{ xs: "100%", md: "50%" }}
-          height={{ xs: "200px", sm: "300px", md: "auto" }}
-          bgcolor="#1E1E1E"
-          m={{ xs: 0, md: 1 }}
-          mt={{ xs: 2, md: 1 }}
-          boxShadow="0px 8px 25px rgba(0, 0, 0, 0.7)"
           sx={{
-            backgroundImage: "url(/image/ai.png)",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            borderRadius: { xs: "5px", md: "5px 5px 5px 30px" },
+            width: { xs: '100%', md: '50%' },
+            height: { xs: '200px', md: 'auto' },
+            backgroundColor: '#1E1E1E',
+            backgroundImage: 'url(/image/ai.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
           }}
         />
       </Box>
