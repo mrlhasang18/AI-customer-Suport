@@ -2,15 +2,20 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import dotenv from 'dotenv';
+dotenv.config();
 
+// console.log(process.env.REACT_APP_API_KEY);
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyAfzXiDaTZrFG4PnHCdj4Pw_19SaxNSCH0",
-  authDomain: "ai-customtersupport.firebaseapp.com",
-  projectId: "ai-customtersupport",
-  storageBucket: "ai-customtersupport.appspot.com",
-  messagingSenderId: "931583057264",
-  appId: "1:931583057264:web:5be0d743ad861fe6a043b5",
-  measurementId: "G-F2QGX2GDWC",
+  apiKey: "AIzaSyDBcmeA7TsAkuXjytWriv5n32LEOCR9mWw",
+  authDomain: "yetiai-cfb49.firebaseapp.com",
+  projectId: "yetiai-cfb49",
+  storageBucket: "yetiai-cfb49.appspot.com",
+  messagingSenderId: "156164518882",
+  appId: "1:156164518882:web:8547893a7c705b72faffbb",
+  measurementId: "G-K83HP0MXCN"
 };
 
 const app = initializeApp(firebaseConfig);

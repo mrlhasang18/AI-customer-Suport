@@ -94,7 +94,7 @@ export default function Home() {
           handleNewChat();
         }
       }
-    };
+    }
     fetchPreviousChatSession();
   }, [user]);
 
